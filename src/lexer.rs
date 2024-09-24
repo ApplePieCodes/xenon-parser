@@ -1,4 +1,3 @@
-
 use crate::token::{Token, TokenType};
 
 const KEYWORDS: [&str; 3] = ["use", "void", "return"];
