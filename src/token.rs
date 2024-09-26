@@ -34,7 +34,7 @@ impl fmt::Display for Token {
         match self.ttype {
             TokenType::Identifier => write!(f, "Identifier({})", self.value),
             TokenType::Keyword => write!(f, "Keyword({})", self.value),
-            TokenType::IntegerLiteral => write!(f, "FloatLiteral({})", self.value),
+            TokenType::IntegerLiteral => write!(f, "IntegerLiteral({})", self.value),
             TokenType::FloatLiteral => write!(f, "FloatLiteral({})", self.value),
             TokenType::StringLiteral => write!(f, "StringLiteral(\"{}\")", self.value),
             TokenType::Operator => write!(f, "Operator({})", self.value),

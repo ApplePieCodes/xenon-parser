@@ -16,7 +16,7 @@ impl Lexer {
         let mut tokens: Vec<Token> = vec![];
         let mut buffer: String = String::new();
         let length = self.code.len() as u128;
-        let mut line: u128 = 0;
+        let mut line: u128 = 1;
 
         while self.i < length {
             if self.peek(0).is_alphabetic() || self.peek(0) == '_' {
@@ -80,11 +80,84 @@ impl Lexer {
             else {
                 let mut tok = Token::new();
 
-                if (self.peek(0) == ';') {
+                if self.peek(0) == ';' {
                     tok.ttype = TokenType::Symbol;
                     tok.value = ";".to_string();
                 }
+                else if self.peek(0) == '+' {
+                    tok.ttype = TokenType::Operator;
+                    if self.peek(1) == '=' {
+                        tok.value = "+=".to_string();
+                        self.i+=1;
+                    }
+                    else if self.peek(1) == '+' {
+                        tok.value = "++".to_string();
+                        self.i+=1;
+                    }
+                    else {
+                        tok.value = "+".to_string();
+                    }
+                }
+                else if self.peek(0) == '-' {
+                    tok.ttype = TokenType::Operator;
+                    if self.peek(1) == '=' {
+                        tok.value = "-=".to_string();
+                        self.i+=1;
+                    }
+                    else if self.peek(1) == '-' {
+                        tok.value = "--".to_string();
+                        self.i+=1;
+                    }
+                    else {
+                        tok.value = "-".to_string();
+                    }
+                }
+                else if self.peek(0) == '*' {
+                    tok.ttype = TokenType::Operator;
+                    if self.peek(1) == '=' {
+                        tok.value = "*=".to_string();
+                        self.i+=1;
+                    }
+                    else {
+                        tok.value = "*".to_string();
+                    }
+                }
+                else if self.peek(0) == '/' {
+                    tok.ttype = TokenType::Operator;
+                    if self.peek(1) == '=' {
+                        tok.value = "/=".to_string();
+                        self.i+=1;
+                    }
+                    else {
+                        tok.value = "/".to_string();
+                    }
+                }
+                else if self.peek(0) == '(' {
+                    tok.ttype = TokenType::Symbol;
+                    tok.value = "(".to_string();
+                }
+                else if self.peek(0) == ')' {
+                    tok.ttype = TokenType::Symbol;
+                    tok.value = ")".to_string();
+                }
+                else if self.peek(0) == '[' {
+                    tok.ttype = TokenType::Symbol;
+                    tok.value = "[".to_string();
+                }
+                else if self.peek(0) == ']' {
+                    tok.ttype = TokenType::Symbol;
+                    tok.value = "]".to_string();
+                }
+                else if self.peek(0) == '{' {
+                    tok.ttype = TokenType::Symbol;
+                    tok.value = "{".to_string();
+                }
+                else if self.peek(0) == '}' {
+                    tok.ttype = TokenType::Symbol;
+                    tok.value = "}".to_string();
+                }
 
+                tok.line = line;
                 self.i+=1;
                 tokens.push(tok);
             }
