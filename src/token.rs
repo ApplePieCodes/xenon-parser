@@ -5,6 +5,7 @@ pub enum TokenType {
     Keyword,
     IntegerLiteral,
     FloatLiteral,
+    StringLiteral,
     Operator,
     Symbol,
     Unknown
@@ -35,6 +36,7 @@ impl fmt::Display for Token {
             TokenType::Keyword => write!(f, "Keyword({})", self.value),
             TokenType::IntegerLiteral => write!(f, "FloatLiteral({})", self.value),
             TokenType::FloatLiteral => write!(f, "FloatLiteral({})", self.value),
+            TokenType::StringLiteral => write!(f, "StringLiteral(\"{}\")", self.value),
             TokenType::Operator => write!(f, "Operator({})", self.value),
             TokenType::Symbol => write!(f, "Symbol({})", self.value),
             TokenType::Unknown => write!(f, "Unknown"),

@@ -1,11 +1,12 @@
-use lexer::lex;
+use lexer::Lexer;
 
 mod token;
 mod lexer;
 
 fn main() {
-    let code = "return 12;";
-    let tokens = lex(code);
+    let code = "return \"Hello World\";";
+    let mut lexer = Lexer::new(code);
+    let tokens = lexer.lex();
     for token in tokens {
         println!("{}", token);
     }
