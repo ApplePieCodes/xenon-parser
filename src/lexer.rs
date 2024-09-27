@@ -156,11 +156,42 @@ impl Lexer {
                     tok.ttype = TokenType::Symbol;
                     tok.value = "}".to_string();
                 }
-
+                else if self.peek(0) == '=' {
+                    tok.ttype = TokenType::Operator;
+                    if self.peek(1) == '=' {
+                        tok.value = "==".to_string();
+                        self.i+=1;
+                    }
+                    else {
+                        tok.value = "=".to_string();
+                    }
+                }
+                else if self.peek(0) == '<' {
+                    tok.ttype = TokenType::Operator;
+                    if self.peek(1) == '=' {
+                        tok.value = "<=".to_string();
+                        self.i+=1;
+                    }
+                    else {
+                        tok.value = "<".to_string();
+                    }
+                }
+                else if self.peek(0) == '>' {
+                    tok.ttype = TokenType::Operator;
+                    if self.peek(1) == '=' {
+                        tok.value = ">=".to_string();
+                        self.i+=1;
+                    }
+                    else {
+                        tok.value = ">".to_string();
+                    }
+                }
+                
                 tok.line = line;
                 self.i+=1;
                 tokens.push(tok);
             }
+            
             buffer.clear();
         }
 

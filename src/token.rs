@@ -1,5 +1,6 @@
 use std::fmt;
 
+#[derive(Clone, Copy, PartialEq)]
 pub enum TokenType {
     Identifier,
     Keyword,
@@ -11,6 +12,7 @@ pub enum TokenType {
     Unknown
 }
 
+#[derive(Clone)]
 pub struct Token {
     pub ttype: TokenType,
     pub value: String,
