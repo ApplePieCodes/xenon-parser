@@ -1,7 +1,7 @@
 use crate::token::{Token, TokenType};
 
 const KEYWORDS: [&str; 3] = ["use", "void", "return"];
-
+// TODO: Rewrite in Logos
 pub struct Lexer {
     code: Vec<char>,
     i: u128
