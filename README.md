@@ -1,0 +1,1 @@
+# Thanks to https://github.com/megabytesofrem/ for letting me use your lexer as a base and for teaching me Logos

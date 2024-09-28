@@ -20,12 +20,12 @@ impl Parser {
         }
     }
 
-    fn parse_use_statement(&mut self) -> UseStatement {
+    /*fn parse_use_statement(&mut self) -> UseStatement {
         let mut statement: UseStatement;
         self.i+=1;
         statement.name = self.peek(0).value;
         statement
-    }
+    }*/
 
     fn match_token(&mut self, offset: i128, t: TokenType) -> bool {
         if self.peek(offset).ttype == t {
