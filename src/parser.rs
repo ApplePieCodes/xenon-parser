@@ -1,58 +1,78 @@
-use crate::{node::UseStatement, token::{Token, TokenType}};
+use logex::log;
 
-pub struct Parser {
-    tokens: Vec<Token>,
-    i: u128,
-    tokenlen: u128
+use crate::{lexer::{SourceLoc, Token, TokenKind}, node::{Program, UseStatement}};
+
+pub struct Parser<'a> {
+    tokens: &'a [Token<'a>], // Changed to a slice for better flexibility
+    i: usize,
 }
 
-impl Parser {
-    pub fn new(toks: Vec<Token>) -> Self {
-        let clone = toks.clone();
-        Parser {tokens: toks, i: 0, tokenlen: clone.len() as u128}
+impl<'a> Parser<'a> {
+    // Constructor to take a slice instead of a reference to Vec
+    pub fn new(toks: &'a Vec<Token<'a>>) -> Self { // Pass in tokens with lifetime 'a
+        Parser { tokens: toks, i: 0 }
     }
 
-    pub fn parse(&mut self) {
-        while self.i < self.tokenlen {
-            if (self.match_token_exact(0, TokenType::Keyword, "use".to_string())) {
 
+    pub fn parse(&mut self) -> Program {
+        let mut program = Program::new();
+        while self.i < self.tokens.len() {
+            if self.match_token(0, TokenKind::UseKw) {
+                program.use_statements.push(self.parse_use_statement());
+            }
+            else {
+                self.i+=1;
             }
         }
+        program
     }
 
-    /*fn parse_use_statement(&mut self) -> UseStatement {
-        let mut statement: UseStatement;
+    pub fn parse_use_statement(&mut self) -> UseStatement {
+        let mut statement = UseStatement::new();
         self.i+=1;
-        statement.name = self.peek(0).value;
-        statement
-    }*/
+        if ! self.match_token(0, TokenKind::Identifier) {
+            let mut buffer = "".to_string();
+            buffer.push_str("at line ");
+            buffer.push_str(self.peek(-1).location.line.to_string().as_str());
+            buffer.push_str(": Expected Identifier after Use Keyword");
+            log(&buffer, logex::LogType::FatalError);
+        }
+        statement.name = self.peek(0).literal.to_string();
+        self.i+=1;
+        if ! self.match_token(0, TokenKind::Semicolon) {
+            let mut buffer = "".to_string();
+            buffer.push_str("at line ");
+            buffer.push_str(self.peek(-1).location.line.to_string().as_str());
+            buffer.push_str(": Expected Semicolon after Identifier");
+            log(&buffer, logex::LogType::FatalError);
+        }
+        self.i+=1;
+        return statement;
+    }
 
-    fn match_token(&mut self, offset: i128, t: TokenType) -> bool {
-        if self.peek(offset).ttype == t {
-            return true;
+    fn match_token(&mut self, offset: isize, t: TokenKind) -> bool {
+        if self.peek(offset).kind == t {
+            true
         }
         else {
-            return false;
+            false
         }
     }
 
-    fn match_token_exact(&mut self, offset: i128, t: TokenType, value: String) -> bool {
-        if self.peek(offset).ttype == t && self.peek(offset).value == value {
-            return true;
+    fn match_token_exact(&mut self, offset: isize, t: TokenKind, value: &str) -> bool {
+        if self.peek(0).kind == t && self.peek(0).literal == value {
+            true
         }
         else {
-            return false;
+            false
         }
     }
-
-    fn peek(&mut self, offset: i128) -> Token {
-        let index = self.i as i128 + offset;
-        let indexusize = index as usize;
-        if index >= 0 && index < self.tokenlen as i128 {
-            return self.tokens[indexusize].clone();
-        }
-        else {
-            return Token {ttype: TokenType::Unknown, value: "".to_string(), line: 0};
+    fn peek(&self, offset: isize) -> Token {
+        let index = self.i as isize + offset;
+        if index >= 0 && index < self.tokens.len() as isize {
+            self.tokens[index as usize].clone()
+        } else {
+            Token {kind: TokenKind::Whitespace, location: SourceLoc {line: 0, start: 0, end: 0}, literal: ""}
         }
     }
 }

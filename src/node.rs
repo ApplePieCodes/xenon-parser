@@ -1,49 +1,20 @@
-// Abstracts
-pub enum Expression {
-    Term(Term),
-    BinaryOperation(Box<BinaryOperation>)
+#[derive(Debug)]
+pub struct Program {
+    pub use_statements: Vec<UseStatement>
 }
-pub enum Term {
-    StringLiteral(StringLiteral),
-    IntegerLiteral(IntegerLiteral),
-    FunctionCall(FunctionCall)
-}
-pub enum Statement {
-    FunctionCall(FunctionCall),
-    VariableDefinition(VariableDefinition),
-    UseStatement(UseStatement)
+impl Program {
+    pub fn new() -> Self {
+        Program {use_statements: Vec::new()}
+    }
 }
 
+#[derive(Debug)]
 pub struct UseStatement {
     pub name: String
-
-    
+}
+impl UseStatement {
+    pub fn new() -> Self {
+        UseStatement {name: "".to_string()}
+    }
 }
 
-// Core Classes
-pub struct BinaryOperation {
-    left: Box<Expression>,
-    op: String,
-    right: Box<Expression>
-}
-pub struct FunctionCall {
-    name: String,
-    arguements: Vec<Expression>
-}
-pub struct VariableDefinition {
-    dtype: String,
-    name: String,
-    value: Option<Expression>,
-}
-pub struct VariableRedefinition {
-    name: String,
-    value: Expression
-}
-
-// Literals
-pub struct StringLiteral {
-    value: String
-}
-pub struct IntegerLiteral {
-    value: String
-}

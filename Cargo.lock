@@ -225,9 +225,9 @@ checksum = "a7a70ba024b9dc04c27ea2f0c0548feb474ec5c54bba33a7f72f873a39d07b24"
 
 [[package]]
 name = "logex"
-version = "0.1.1"
+version = "0.1.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c5087b2700b4d090a076eb9404432decada45f7c8e5cb83054700bb33769a0e9"
+checksum = "b0766fe07cbef4111864ea4efae48d1e2b82a882481bbeea0e9c0a7f2c4e9533"
 dependencies = [
  "colored",
 ]

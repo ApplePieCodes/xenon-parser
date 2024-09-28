@@ -81,6 +81,10 @@ pub enum TokenKind {
     StarEq,
     #[token("/=")]
     SlashEq,
+    #[token("&&")]
+    And,
+    #[token("||")]
+    Or,
 
     //Keywords
     #[token("use")]
@@ -92,7 +96,7 @@ pub enum TokenKind {
 
 
     // Literals
-    #[regex(r"[_a-zA-Z][_0-9a-zA-Z]*")]
+    #[regex(r"[_a-zA-Z][_.0-9a-zA-Z]*")]
     Identifier,
     #[regex(r"[-]?[0-9][0-9]*")]
     IntLit,
@@ -103,7 +107,7 @@ pub enum TokenKind {
     #[regex(r#""(\\[\\"]|[^"])*""#)]
     StringLit,
 
-    #[regex(r"--.*\n?")]
+    #[regex(r"//.*\n?")]
     Comment,
 
     // We ignore whitespace in the lexer
@@ -145,8 +149,8 @@ impl Op {
             Op::Mul => "*",
             Op::Div => "/",
             Op::Mod => "%",
-            Op::And => "and",
-            Op::Or => "or",
+            Op::And => "&&",
+            Op::Or => "||",
             Op::Eq => "==",
             Op::BangEq => "!=",
             Op::Less => "<",
@@ -246,11 +250,11 @@ impl<'a> Iterator for TokenIter<'a> {
 }
 
 /// Return an iterator over the tokens in the source string
-pub fn lex_tokens(src: &str) -> LexerIter {
+pub fn lex_tokens<'a>(src: &'a str) -> LexerIter<'a> {
     let iter = TokenIter {
         inner: TokenKind::lexer(src).spanned(),
         src,
     };
 
-    Box::new(iter).peekable()
+    Box::new(iter).peekable() // LexerIter<'a>
 }

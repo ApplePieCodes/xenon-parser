@@ -1,8 +1,1 @@
-use x86.display;
-use x86.cpu;
-
-void main() {
-    vga_text.writestring("Hello Kernel");
-    cpu.switch_mode(CPUMode.Long);
-    vga_text.writestring("Hello Long Mode");
-}
+use x86_64;
