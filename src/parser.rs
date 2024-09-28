@@ -1,4 +1,4 @@
-use crate::token::{Token, TokenType};
+use crate::{node::UseStatement, token::{Token, TokenType}};
 
 pub struct Parser {
     tokens: Vec<Token>,
@@ -14,11 +14,20 @@ impl Parser {
 
     pub fn parse(&mut self) {
         while self.i < self.tokenlen {
-            
+            if (self.match_token_exact(0, TokenType::Keyword, "use".to_string())) {
+
+            }
         }
     }
 
-    pub fn match_token(&mut self, offset: i128, t: TokenType) -> bool {
+    fn parse_use_statement(&mut self) -> UseStatement {
+        let mut statement: UseStatement;
+        self.i+=1;
+        statement.name = self.peek(0).value;
+        statement
+    }
+
+    fn match_token(&mut self, offset: i128, t: TokenType) -> bool {
         if self.peek(offset).ttype == t {
             return true;
         }
@@ -27,7 +36,7 @@ impl Parser {
         }
     }
 
-    pub fn match_token_exact(&mut self, offset: i128, t: TokenType, value: String) -> bool {
+    fn match_token_exact(&mut self, offset: i128, t: TokenType, value: String) -> bool {
         if self.peek(offset).ttype == t && self.peek(offset).value == value {
             return true;
         }
@@ -36,7 +45,7 @@ impl Parser {
         }
     }
 
-    pub fn peek(&mut self, offset: i128) -> Token {
+    fn peek(&mut self, offset: i128) -> Token {
         let index = self.i as i128 + offset;
         let indexusize = index as usize;
         if index >= 0 && index < self.tokenlen as i128 {

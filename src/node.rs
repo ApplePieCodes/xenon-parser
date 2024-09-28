@@ -10,7 +10,14 @@ pub enum Term {
 }
 pub enum Statement {
     FunctionCall(FunctionCall),
-    VariableDefinition(VariableDefinition)
+    VariableDefinition(VariableDefinition),
+    UseStatement(UseStatement)
+}
+
+pub struct UseStatement {
+    pub name: String
+
+    
 }
 
 // Core Classes
