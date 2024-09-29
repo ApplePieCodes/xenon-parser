@@ -2,7 +2,7 @@
 name = "xenon"
 version = "0.1.0"
 authors = ["Liam Greenway <ApplePiePc@outlook.com>"]
-edition = "2024"
+edition = "2021"
 rust-version = "1.81"
 description = "The Xenon Language Compiler"
 readme = "README.md"
