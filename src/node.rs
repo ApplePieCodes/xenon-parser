@@ -21,9 +21,16 @@ impl UseStatement {
 
 #[derive(Debug)]
 pub struct FunctionDefinition {
-    pub name: String,
+    pub public: bool,
     pub rtype: String,
+    pub name: String,
+    pub arguements: Vec<Statement>,
     pub actions: Vec<Statement>
+}
+impl FunctionDefinition {
+    pub fn new() -> Self {
+        FunctionDefinition { public: false, rtype: "void".to_string(), name: "unknown".to_string(), arguements: vec![], actions: vec![]}
+    }
 }
 
 #[derive(Debug)]

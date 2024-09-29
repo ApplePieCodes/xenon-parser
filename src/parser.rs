@@ -1,6 +1,7 @@
 use logex::log;
+use serde::de;
 
-use crate::{lexer::{SourceLoc, Token, TokenKind}, node::{Program, UseStatement}};
+use crate::{lexer::{SourceLoc, Token, TokenKind}, node::{FunctionDefinition, Program, UseStatement}};
 
 pub struct Parser<'a> {
     tokens: &'a [Token<'a>], // Changed to a slice for better flexibility
@@ -20,6 +21,9 @@ impl<'a> Parser<'a> {
             if self.match_token(0, TokenKind::UseKw) {
                 program.use_statements.push(self.parse_use_statement());
             }
+            else if self.match_token(0, TokenKind::PubKw) && self.match_token(1, TokenKind::Identifier) && self.match_token(2, TokenKind::Identifier) && self.match_token(3, TokenKind::LParen) {
+                program.function_defs.push(self.parse_function_definition());
+            }
             else {
                 self.i+=1;
             }
@@ -33,7 +37,7 @@ impl<'a> Parser<'a> {
         if ! self.match_token(0, TokenKind::Identifier) {
             let mut buffer = "".to_string();
             buffer.push_str("at line ");
-            buffer.push_str(self.peek(-1).location.line.to_string().as_str());
+            buffer.push_str(self.peek(0).location.line.to_string().as_str());
             buffer.push_str(": Expected Identifier after Use Keyword");
             log(&buffer, logex::LogType::FatalError);
         }
@@ -42,12 +46,69 @@ impl<'a> Parser<'a> {
         if ! self.match_token(0, TokenKind::Semicolon) {
             let mut buffer = "".to_string();
             buffer.push_str("at line ");
-            buffer.push_str(self.peek(-1).location.line.to_string().as_str());
+            buffer.push_str(self.peek(0).location.line.to_string().as_str());
             buffer.push_str(": Expected Semicolon after Identifier");
             log(&buffer, logex::LogType::FatalError);
         }
         self.i+=1;
         return statement;
+    }
+
+    pub fn parse_function_definition(&mut self) -> FunctionDefinition {
+        let mut definition = FunctionDefinition::new();
+        if self.match_token(0, TokenKind::PubKw) {
+            definition.public = true;
+            self.i+=1;
+        }
+
+        if ! self.match_token(0, TokenKind::Identifier) {
+            let mut buffer = "".to_string();
+            buffer.push_str("at line ");
+            buffer.push_str(self.peek(0).location.line.to_string().as_str());
+            buffer.push_str(": Expected Identifier to start Function Declaration");
+            log(&buffer, logex::LogType::FatalError);
+        }
+
+        definition.rtype = self.peek(0).literal.to_string();
+
+        self.i+=1;
+
+        if ! self.match_token(0, TokenKind::Identifier) {
+            let mut buffer = "".to_string();
+            buffer.push_str("at line ");
+            buffer.push_str(self.peek(0).location.line.to_string().as_str());
+            buffer.push_str(": Expected Function Name after Type");
+            log(&buffer, logex::LogType::FatalError);
+        }
+
+        definition.name = self.peek(0).literal.to_string();
+
+        self.i+=1;
+
+        if ! self.match_token(0, TokenKind::LParen) {
+            let mut buffer = "".to_string();
+            buffer.push_str("at line ");
+            buffer.push_str(self.peek(0).location.line.to_string().as_str());
+            buffer.push_str(": Expected Open Paren after Function Name");
+            log(&buffer, logex::LogType::FatalError);
+        }
+
+        self.i+=1;
+
+        //TODO: Parse Args
+
+        if ! self.match_token(0, TokenKind::RParen) {
+            let mut buffer = "".to_string();
+            buffer.push_str("at line ");
+            buffer.push_str(self.peek(0).location.line.to_string().as_str());
+            buffer.push_str(": Expected Close Paren after Function Arguments");
+            log(&buffer, logex::LogType::FatalError);
+        }
+
+        self.i+=1;
+
+
+        return definition;
     }
 
     fn match_token(&mut self, offset: isize, t: TokenKind) -> bool {

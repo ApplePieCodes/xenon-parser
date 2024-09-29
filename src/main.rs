@@ -1,6 +1,6 @@
-use std::{borrow::Borrow, fs::File, io::{self, Read}, iter::Peekable};
+use std::{fs::File, io::{self, Read}};
 
-use lexer::{LexerIter, TokenIter};
+use lexer::LexerIter;
 use parser::Parser;
 
 mod lexer;
@@ -27,6 +27,6 @@ fn main() {
             let program = parser.parse();  // Parse the tokens (assuming `parse` is implemented)
             println!("{:#?}", program);
         },
-        Err(e) => logex::log("File Could Not Be Read", logex::LogType::FatalError),
+        Err(_e) => logex::log("File Could Not Be Read", logex::LogType::FatalError),
     }
 }
