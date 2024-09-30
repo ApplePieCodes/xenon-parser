@@ -35,15 +35,31 @@ impl FunctionDefinition {
 
 #[derive(Debug)]
 pub struct VariableDefinition {
-    pub name: String,
     pub dtype: String,
+    pub name: String,
     pub value: Expression
 }
+impl VariableDefinition {
+    pub fn new() -> Self {
+        VariableDefinition {
+            dtype: "".to_string(),
+            name: "".to_string(),
+            value: Expression::Term(Term::Null(Null::new())), // Correct enum wrapping
+        }
+    }
+}
+
 
 #[derive(Debug)]
 pub struct StringLiteral {
     pub value: String
 }
+impl StringLiteral {
+    pub fn new() -> Self {
+        StringLiteral {value: "".to_string()}
+    }
+}
+
 #[derive(Debug)]
 pub struct CharLiteral {
     pub value: String
@@ -67,12 +83,14 @@ pub enum Term {
     CharLiteral(CharLiteral),
     IntegerLiteral(IntegerLiteral),
     FloatLiteral(FloatLiteral),
-    BooleanLiteral(BooleanLiteral)
+    BooleanLiteral(BooleanLiteral),
+    Null(Null)
 }
 
 #[derive(Debug)]
 pub enum Expression {
-    BinaryOperation(BinaryOperation)
+    BinaryOperation(BinaryOperation),
+    Term(Term)
 }
 
 #[derive(Debug)]
@@ -85,4 +103,14 @@ pub struct BinaryOperation {
 #[derive(Debug)]
 pub enum Statement {
     VariableDefinition(VariableDefinition)
+}
+
+#[derive(Debug)]
+pub struct Null {
+
+}
+impl Null {
+    pub fn new() -> Self {
+        Null {}
+    }
 }

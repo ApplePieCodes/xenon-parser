@@ -1,3 +1,3 @@
 use x86_64;
 
-pub void main()
+pub void main(int i)

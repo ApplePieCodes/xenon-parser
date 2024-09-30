@@ -1,7 +1,8 @@
-use logex::log;
-use serde::de;
+use std::vec;
 
-use crate::{lexer::{SourceLoc, Token, TokenKind}, node::{FunctionDefinition, Program, UseStatement}};
+use logex::log;
+
+use crate::{lexer::{SourceLoc, Token, TokenKind}, node::{FunctionDefinition, Program, Statement, UseStatement, VariableDefinition}};
 
 pub struct Parser<'a> {
     tokens: &'a [Token<'a>], // Changed to a slice for better flexibility
@@ -95,20 +96,44 @@ impl<'a> Parser<'a> {
 
         self.i+=1;
 
-        //TODO: Parse Args
-
-        if ! self.match_token(0, TokenKind::RParen) {
-            let mut buffer = "".to_string();
-            buffer.push_str("at line ");
-            buffer.push_str(self.peek(0).location.line.to_string().as_str());
-            buffer.push_str(": Expected Close Paren after Function Arguments");
-            log(&buffer, logex::LogType::FatalError);
+        while ! self.match_token(0, TokenKind::RParen) {
+            if self.match_token(0, TokenKind::Identifier) {
+                let mut def = VariableDefinition::new();
+                def.dtype = self.peek(0).literal.to_string();
+                self.i+=1;
+                def.name = self.peek(0).literal.to_string();
+                self.i+=1;
+                definition.arguements.push(Statement::VariableDefinition(def));
+            }
+            else {
+                self.i+=1;
+            }
+            if self.match_token(0, TokenKind::Comma) {
+                self.i+=1;
+            }
         }
+        
+        self.i+=1;
+
+        // Should be on LCurly Now
 
         self.i+=1;
 
+        // Start parsing scope
+
+        definition.actions = self.parse_scope();
 
         return definition;
+    }
+
+    fn parse_scope(&mut self) -> Vec<Statement> {
+        let mut scope: Vec<Statement> = vec![];
+
+        while ! self.match_token(0, TokenKind::RCurly) {
+            
+        }
+
+        return scope;
     }
 
     fn match_token(&mut self, offset: isize, t: TokenKind) -> bool {
