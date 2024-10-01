@@ -6,7 +6,7 @@ mod lexer;
 mod parser;
 mod node;
 
-fn parse(code: &str) -> Program {
+pub fn parse(code: &str) -> Program {
     let tokens: LexerIter = lexer::lex_tokens(code);  // Lex tokens from the source code
 
     let tokvec: Vec<_> = tokens.collect(); // Collect tokens into a Vec
