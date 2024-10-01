@@ -1,12 +1,12 @@
 [package]
 name = "xenon-parser"
-version = "0.1.1"
+version = "0.1.2"
 authors = ["Liam Greenway <ApplePiePc@outlook.com>"]
 edition = "2021"
 rust-version = "1.81"
 description = "The Xenon Language Parser/Lexer"
 readme = "README.md"
-repository = "https://github.com/ApplePieCodes/xenon-rs"
+repository = "https://github.com/ApplePieCodes/xenon-parser"
 license = "Apache-2.0"
 keywords = ["language", "compiler", "lexer", "parser", "xenon"]
 categories = ["compilers", "development-tools", "parsing"]
