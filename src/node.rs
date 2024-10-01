@@ -1,90 +1,60 @@
 #[derive(Debug)]
 pub struct Program {
-    pub use_statements: Vec<UseStatement>,
-    pub function_defs: Vec<FunctionDefinition>
+    pub namespaces: Vec<Namespace>
 }
 impl Program {
     pub fn new() -> Self {
-        Program {use_statements: Vec::new(), function_defs: Vec::new()}
+        Program {namespaces: vec![]}
     }
 }
 
 #[derive(Debug)]
-pub struct UseStatement {
-    pub name: String
+pub struct Namespace {
+    pub name: String,
+    pub definitions: Vec<Definition>
 }
-impl UseStatement {
+impl Namespace {
     pub fn new() -> Self {
-        UseStatement {name: "".to_string()}
+        Namespace {name: "".to_string(), definitions: vec![]}
     }
+}
+
+#[derive(Debug)]
+// Definitions
+pub enum Definition {
+    FunctionDefinition(FunctionDefinition),
+    ClassDefinition(ClassDefinition),
+    VariableDefinition(VariableDefinition)
 }
 
 #[derive(Debug)]
 pub struct FunctionDefinition {
-    pub public: bool,
-    pub rtype: String,
-    pub name: String,
-    pub arguements: Vec<Statement>,
-    pub actions: Vec<Statement>
-}
-impl FunctionDefinition {
-    pub fn new() -> Self {
-        FunctionDefinition { public: false, rtype: "void".to_string(), name: "unknown".to_string(), arguements: vec![], actions: vec![]}
-    }
+    ftype: String,
+    name: String,
+    arguements: Vec<VariableDefinition>,
+    statements: Vec<Statement>,
 }
 
 #[derive(Debug)]
+pub struct ClassDefinition {
+    name: String,
+    definitions: Vec<Definition>
+}
+
+#[derive(Debug)]
+//Statement and Definition
 pub struct VariableDefinition {
-    pub dtype: String,
-    pub name: String,
-    pub value: Expression
-}
-impl VariableDefinition {
-    pub fn new() -> Self {
-        VariableDefinition {
-            dtype: "".to_string(),
-            name: "".to_string(),
-            value: Expression::Term(Term::Null(Null::new())), // Correct enum wrapping
-        }
-    }
-}
-
-
-#[derive(Debug)]
-pub struct StringLiteral {
-    pub value: String
-}
-impl StringLiteral {
-    pub fn new() -> Self {
-        StringLiteral {value: "".to_string()}
-    }
+    dtype: String,
+    name: String,
+    value: Expression
 }
 
 #[derive(Debug)]
-pub struct CharLiteral {
-    pub value: String
-}
-#[derive(Debug)]
-pub struct IntegerLiteral {
-    pub value: String
-}
-#[derive(Debug)]
-pub struct FloatLiteral {
-    pub value: String
-}
-#[derive(Debug)]
-pub struct BooleanLiteral {
-    pub value: String
-}
-
-#[derive(Debug)]
-pub enum Term {
-    StringLiteral(StringLiteral),
-    CharLiteral(CharLiteral),
-    IntegerLiteral(IntegerLiteral),
-    FloatLiteral(FloatLiteral),
-    BooleanLiteral(BooleanLiteral),
-    Null(Null)
+// Statements
+pub enum Statement {
+    VariableDefinition(VariableDefinition),
+    FunctionCall(FunctionCall),
+    VariableRedefinition(VariableRedefinition)
 }
 
 #[derive(Debug)]
@@ -94,23 +64,55 @@ pub enum Expression {
 }
 
 #[derive(Debug)]
+pub enum Term {
+    FunctionCall(FunctionCall),
+    IntegerLiteral(IntegerLiteral),
+    FloatLiteral(FloatLiteral),
+    StringLiteral(StringLiteral),
+    CharLiteral(CharLiteral),
+    BooleanLiteral(BooleanLiteral)
+}
+
+#[derive(Debug)]
+pub struct IntegerLiteral {
+    value: String
+}
+
+#[derive(Debug)]
+pub struct FloatLiteral {
+    value: String
+}
+
+#[derive(Debug)]
+pub struct StringLiteral {
+    value: String
+}
+
+#[derive(Debug)]
+pub struct CharLiteral {
+    value: String
+}
+
+#[derive(Debug)]
+pub struct BooleanLiteral {
+    value: String
+}
+
+#[derive(Debug)]
+pub struct FunctionCall {
+    name: String,
+    arguements: Vec<Expression>
+}
+
+#[derive(Debug)]
+pub struct VariableRedefinition {
+    name: String,
+    value: Expression
+}
+
+#[derive(Debug)]
 pub struct BinaryOperation {
-    pub left: Box<Expression>,
-    pub operator: String,
-    pub right: Box<Expression>
-}
-
-#[derive(Debug)]
-pub enum Statement {
-    VariableDefinition(VariableDefinition)
-}
-
-#[derive(Debug)]
-pub struct Null {
-
-}
-impl Null {
-    pub fn new() -> Self {
-        Null {}
-    }
+    left: Box<Expression>,
+    op: String,
+    right: Box<Expression>,
 }

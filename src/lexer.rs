@@ -25,74 +25,14 @@ pub struct SourceLoc {
 
 #[derive(Debug, Clone, PartialEq, Logos)]
 pub enum TokenKind {
-    #[token("+")]
-    Plus,
-    #[token("-")]
-    Minus,
-    #[token("*")]
-    Star,
-    #[token("/")]
-    Slash,
-    #[token("(")]
-    LParen,
-    #[token(")")]
-    RParen,
-    #[token("[")]
-    LSquare,
-    #[token("]")]
-    RSquare,
     #[token("{")]
-    LCurly,
-    #[token("}")]
-    RCurly,
-    #[token(".")]
-    Dot,
-    #[token(",")]
-    Comma,
-    #[token("?")]
-    Question,
-    #[token(":")]
-    Colon,
-    #[token(";")]
-    Semicolon,
-    #[token("&")]
-    Ampersand,
-    #[token("=")]
-    Equal,
-    #[token("!")]
-    Bang,
-    #[token("==")]
-    DoubleEq,
-    #[token("!=")]
-    BangEq,
-    #[token("<")]
-    Less,
-    #[token("<=")]
-    LessEq,
-    #[token(">")]
-    Greater,
-    #[token(">=")]
-    GreaterEq,
-    #[token("+=")]
-    PlusEq,
-    #[token("-=")]
-    MinusEq,
-    #[token("*=")]
-    StarEq,
-    #[token("/=")]
-    SlashEq,
-    #[token("&&")]
-    And,
-    #[token("||")]
-    Or,
+    OpenCurly,
 
-    //Keywords
-    #[token("use")]
-    UseKw,
-    #[token("return")]
-    ReturnKw,
-    #[token("pub")]
-    PubKw,
+    #[token("}")]
+    CloseCurly,
+
+    #[token("namespace")]
+    NamespaceKw,
 
 
     // Literals

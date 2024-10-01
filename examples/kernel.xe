@@ -1,3 +1,5 @@
-use x86_64;
-
-pub void main(int i)
+namespace Lithium {
+    void kmain() {
+        while(true) {};
+    }
+}
