@@ -1,4 +1,4 @@
-use crate::{lexer::{SourceLoc, Token, TokenKind}, node::{Namespace, Program}};
+use crate::{lexer::{SourceLoc, Token, TokenKind}, node::{Definition, FunctionDefinition, Namespace, Program}};
 
 pub struct Parser<'a> {
     tokens: &'a [Token<'a>], // Changed to a slice for better flexibility
@@ -40,10 +40,40 @@ impl<'a> Parser<'a> {
         self.i+=1;
 
         while ! self.match_token(0, TokenKind::CloseCurly) {
-            //TODO: Parse Definitions
+            namespace.definitions.push(self.parse_definition());
         }
 
         return namespace;
+    }
+
+    fn parse_definition(&mut self) -> Definition {
+        if self.match_token(0, TokenKind::PubKw) {
+            if self.match_token(1, TokenKind::ClassKw) {
+                //Parse Class
+            }
+            else if self.match_token(1, TokenKind::Identifier) && self.match_token(2, TokenKind::Identifier) {
+                if self.match_token(3, TokenKind::OpenParen) {
+                    //Parse FunctionDefinition
+                }
+                else {
+                    //Parse VariableDefinition
+                }
+            }
+        }
+        else {
+            if self.match_token(0, TokenKind::ClassKw) {
+                //Parse Class
+            }
+            else if self.match_token(0, TokenKind::Identifier) && self.match_token(1, TokenKind::Identifier) {
+                if self.match_token(2, TokenKind::OpenParen) {
+                    //Parse FunctionDefinition
+                }
+                else {
+                    //Parse VariableDefinition
+                }
+            }
+        }
+        return  Definition::FunctionDefinition(FunctionDefinition::new());
     }
 
     fn match_token(&mut self, offset: isize, t: TokenKind) -> bool {

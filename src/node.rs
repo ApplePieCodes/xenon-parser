@@ -34,6 +34,11 @@ pub struct FunctionDefinition {
     arguements: Vec<VariableDefinition>,
     statements: Vec<Statement>,
 }
+impl FunctionDefinition {
+    pub fn new() -> Self {
+        FunctionDefinition {ftype: "".to_string(), name: "".to_string(), arguements: vec![], statements: vec![]}
+    }
+}
 
 #[derive(Debug)]
 pub struct ClassDefinition {

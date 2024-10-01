@@ -25,14 +25,21 @@ pub struct SourceLoc {
 
 #[derive(Debug, Clone, PartialEq, Logos)]
 pub enum TokenKind {
+    #[token("(")]
+    OpenParen,
+    #[token(")")]
+    CloseParen,
     #[token("{")]
     OpenCurly,
-
     #[token("}")]
     CloseCurly,
 
+    #[token("pub")]
+    PubKw,
     #[token("namespace")]
     NamespaceKw,
+    #[token("class")]
+    ClassKw,
 
 
     // Literals
