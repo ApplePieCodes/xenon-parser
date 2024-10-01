@@ -1,3 +1,6 @@
+/*use eframe::{egui, App, Frame};
+use std::sync::Arc;*/
+
 #[derive(Debug)]
 pub struct Program {
     pub namespaces: Vec<Namespace>
@@ -29,29 +32,42 @@ pub enum Definition {
 
 #[derive(Debug)]
 pub struct FunctionDefinition {
-    ftype: String,
-    name: String,
-    arguements: Vec<VariableDefinition>,
-    statements: Vec<Statement>,
+    pub public: bool,
+    pub ftype: String,
+    pub name: String,
+    pub arguements: Vec<VariableDefinition>,
+    pub statements: Vec<Statement>,
 }
 impl FunctionDefinition {
     pub fn new() -> Self {
-        FunctionDefinition {ftype: "".to_string(), name: "".to_string(), arguements: vec![], statements: vec![]}
+        FunctionDefinition {public: false, ftype: "".to_string(), name: "".to_string(), arguements: vec![], statements: vec![]}
     }
 }
 
 #[derive(Debug)]
 pub struct ClassDefinition {
-    name: String,
-    definitions: Vec<Definition>
+    pub public: bool,
+    pub name: String,
+    pub definitions: Vec<Definition>
+}
+impl ClassDefinition {
+    pub fn new() -> Self {
+        ClassDefinition {name: "".to_string(), definitions: vec![], public: false}
+    }
 }
 
 #[derive(Debug)]
 //Statement and Definition
 pub struct VariableDefinition {
-    dtype: String,
-    name: String,
-    value: Expression
+    pub public: bool,
+    pub dtype: String,
+    pub name: String,
+    pub value: Expression
+}
+impl VariableDefinition {
+    pub fn new() -> Self {
+        VariableDefinition {public: false, dtype: "".to_string(), name: "".to_string(), value: Expression::Null(Null {})}
+    }
 }
 
 #[derive(Debug)]
@@ -59,13 +75,15 @@ pub struct VariableDefinition {
 pub enum Statement {
     VariableDefinition(VariableDefinition),
     FunctionCall(FunctionCall),
-    VariableRedefinition(VariableRedefinition)
+    VariableRedefinition(VariableRedefinition),
+    Null(Null)
 }
 
 #[derive(Debug)]
 pub enum Expression {
     BinaryOperation(BinaryOperation),
-    Term(Term)
+    Term(Term),
+    Null(Null)
 }
 
 #[derive(Debug)]
@@ -75,38 +93,50 @@ pub enum Term {
     FloatLiteral(FloatLiteral),
     StringLiteral(StringLiteral),
     CharLiteral(CharLiteral),
-    BooleanLiteral(BooleanLiteral)
+    BooleanLiteral(BooleanLiteral),
+    VariableReference(VariableReference),
+    Null(Null)
 }
 
 #[derive(Debug)]
 pub struct IntegerLiteral {
-    value: String
+    pub value: String
 }
 
 #[derive(Debug)]
 pub struct FloatLiteral {
-    value: String
+    pub value: String
 }
 
 #[derive(Debug)]
 pub struct StringLiteral {
-    value: String
+    pub value: String
 }
 
 #[derive(Debug)]
 pub struct CharLiteral {
-    value: String
+    pub value: String
 }
 
 #[derive(Debug)]
 pub struct BooleanLiteral {
-    value: String
+    pub value: String
+}
+
+#[derive(Debug)]
+pub struct VariableReference {
+    pub value: String
 }
 
 #[derive(Debug)]
 pub struct FunctionCall {
-    name: String,
-    arguements: Vec<Expression>
+    pub name: String,
+    pub arguements: Vec<Expression>
+}
+impl FunctionCall {
+    pub fn new() -> Self {
+        FunctionCall {name: "".to_string(), arguements: vec![]}
+    }
 }
 
 #[derive(Debug)]
@@ -117,7 +147,15 @@ pub struct VariableRedefinition {
 
 #[derive(Debug)]
 pub struct BinaryOperation {
-    left: Box<Expression>,
-    op: String,
-    right: Box<Expression>,
+    pub left: Box<Expression>,
+    pub op: String,
+    pub right: Box<Expression>,
 }
+impl BinaryOperation {
+    pub fn new() -> Self {
+        BinaryOperation {left: Box::new(Expression::Null(Null {})), op: "".to_string(), right: Box::new(Expression::Null(Null {}))}
+    }
+}
+
+#[derive(Debug)]
+pub struct Null {}

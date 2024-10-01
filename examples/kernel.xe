@@ -1,5 +1,9 @@
-namespace Lithium {
-    void kmain() {
-        while(true) {};
+namespace Kernel {
+    pub void Start() {
+
+    }
+
+    pub void Run() {
+        
     }
 }

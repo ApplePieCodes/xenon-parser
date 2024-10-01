@@ -25,6 +25,34 @@ pub struct SourceLoc {
 
 #[derive(Debug, Clone, PartialEq, Logos)]
 pub enum TokenKind {
+    #[token("=")]
+    Equals,
+    #[token(",")]
+    Comma,
+
+    #[token("+")]
+    Add,
+    #[token("-")]
+    Subtract,
+    #[token("*")]
+    Multiply,
+    #[token("/")]
+    Divide,
+    #[token("%")]
+    Modulus,
+    #[token("==")]
+    EqualsEquals,
+    #[token("!=")]
+    NotEqual,
+    #[token("<")]
+    LessThan,
+    #[token(">")]
+    GreaterThan,
+    #[token("<=")]
+    LessEqual,
+    #[token(">=")]
+    GreaterEq,
+
     #[token("(")]
     OpenParen,
     #[token(")")]
@@ -34,6 +62,10 @@ pub enum TokenKind {
     #[token("}")]
     CloseCurly,
 
+    #[token("true")]
+    TrueKw,
+    #[token("false")]
+    FalseKw,
     #[token("pub")]
     PubKw,
     #[token("namespace")]
