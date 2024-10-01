@@ -1,10 +1,10 @@
 [package]
-name = "xenon"
+name = "xenon-parser"
 version = "0.1.0"
 authors = ["Liam Greenway <ApplePiePc@outlook.com>"]
 edition = "2021"
 rust-version = "1.81"
-description = "The Xenon Language Compiler"
+description = "The Xenon Language Parser/Lexer"
 readme = "README.md"
 repository = "https://github.com/ApplePieCodes/xenon-rs"
 license = "Apache-2.0"
@@ -16,10 +16,6 @@ unsafe_code = "forbid"
 
 [dependencies]
 logos = "0.14.2"
-anyhow = "1.0.82"
-logex = "0.1.4"
-clap = { version = "4.5.4", features = ["derive"] }
+logex = "1.0.0"
 serde_yml = "0.0.11"
 serde = "1.0.208"
-afl = "*"
-url = "*"

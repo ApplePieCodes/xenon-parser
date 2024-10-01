@@ -29,6 +29,8 @@ pub enum TokenKind {
     Equals,
     #[token(",")]
     Comma,
+    #[token(";")]
+    Semicolon,
 
     #[token("+")]
     Add,
@@ -62,6 +64,8 @@ pub enum TokenKind {
     #[token("}")]
     CloseCurly,
 
+    #[token("use")]
+    UseKw,
     #[token("true")]
     TrueKw,
     #[token("false")]

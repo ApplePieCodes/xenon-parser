@@ -1,4 +1,4 @@
-use crate::{lexer::{SourceLoc, Token, TokenKind}, node::{BinaryOperation, BooleanLiteral, ClassDefinition, Definition, Expression, FloatLiteral, FunctionCall, FunctionDefinition, IntegerLiteral, Namespace, Null, Program, Statement, StringLiteral, Term, VariableDefinition, VariableRedefinition, VariableReference}};
+use crate::{lexer::{SourceLoc, Token, TokenKind}, node::{BinaryOperation, BooleanLiteral, ClassDefinition, Definition, Expression, FloatLiteral, FunctionCall, FunctionDefinition, IntegerLiteral, Namespace, Null, Program, Statement, StringLiteral, Term, UseStatement, VariableDefinition, VariableRedefinition, VariableReference}};
 
 pub struct Parser<'a> {
     tokens: &'a [Token<'a>], // Changed to a slice for better flexibility
@@ -19,9 +19,28 @@ impl<'a> Parser<'a> {
             if self.match_token(0, TokenKind::NamespaceKw) {
                 program.namespaces.push(self.parse_namespace());
             }
+            else if self.match_token(0, TokenKind::UseKw) {
+                program.usestatements.push(self.parse_use_statement());
+            }
         }
 
         return program;
+    }
+
+    fn parse_use_statement(&mut self) -> UseStatement {
+        let mut statement = UseStatement::new();
+
+        self.i+=1;
+
+        statement.name = self.peek(0).literal.to_string();
+
+        self.i+=1;
+
+        //Skip Semicolon
+
+        self.i+=1;
+
+        return statement;
     }
 
     fn parse_namespace(&mut self) -> Namespace {
@@ -65,8 +84,8 @@ impl<'a> Parser<'a> {
         self.i+=1;
 
         if self.match_token(0, TokenKind::Equals) {
+            self.i+=1;//Skip Equals
             definition.value = self.parse_expression();
-            self.i+=1;
         }
 
         return definition;
@@ -77,7 +96,9 @@ impl<'a> Parser<'a> {
             return Expression::BinaryOperation(self.parse_binary_operation());
         }
         else {
-            return Expression::Term(self.parse_term());
+            let mut term = Expression::Term(self.parse_term());
+            self.i+=1;
+            return term;
         }
     }
 
@@ -98,6 +119,8 @@ impl<'a> Parser<'a> {
         else {
             operation.right = Box::new(Expression::Term(self.parse_term()));
         }
+
+        self.i+=1;
 
         return operation;
     }
@@ -146,6 +169,10 @@ impl<'a> Parser<'a> {
                 self.i+=1;
             }
         }
+
+        // Skip Closing Paren
+
+        self.i+=1;
         
         return call;
     }
@@ -220,27 +247,46 @@ impl<'a> Parser<'a> {
     }
 
     fn parse_statement(&mut self) -> Statement {
+        let mut statment: Statement;
         if self.match_token(0, TokenKind::Identifier) {
             if self.match_token(1, TokenKind::OpenParen) {
-                return Statement::FunctionCall(self.parse_function_call());
+                statment = Statement::FunctionCall(self.parse_function_call());
             }
-            else if self.match_token(0, TokenKind::Identifier) {
-                return Statement::VariableDefinition(self.parse_variable_definition());
+            else if self.match_token(1, TokenKind::Identifier) {
+                statment = Statement::VariableDefinition(self.parse_variable_definition());
             }
-            else if self.match_token(0, TokenKind::Equals) {
-                return Statement::VariableRedefinition(self.parse_variable_redefinition());
+            else if self.match_token(1, TokenKind::Equals) {
+                statment = Statement::VariableRedefinition(self.parse_variable_redefinition());
             }
             else {
-                return Statement::Null(Null {});
+                statment = Statement::Null(Null {});
             }
         } 
         else {
-            return Statement::Null(Null {});
+            statment = Statement::Null(Null {});
         }
+
+        //Skip Semicolon
+        self.i+=1;
+        
+
+        return statment;
     }
 
     fn parse_variable_redefinition(&mut self) -> VariableRedefinition {
-        
+        let mut redefinition = VariableRedefinition::new();
+
+        redefinition.name = self.peek(0).literal.to_string();
+
+        self.i+=1;
+
+        //Skip Equals
+
+        self.i+=1;
+
+        redefinition.value = self.parse_expression();
+
+        return redefinition;
     }
 
     fn parse_class_definition(&mut self) -> ClassDefinition {
@@ -271,12 +317,7 @@ impl<'a> Parser<'a> {
     }
 
     fn match_token(&mut self, offset: isize, t: TokenKind) -> bool {
-        if self.peek(offset).kind == t {
-            true
-        }
-        else {
-            false
-        }
+        return self.peek(offset).kind == t;
     }
 
     fn peek(&self, offset: isize) -> Token {

@@ -3,11 +3,22 @@ use std::sync::Arc;*/
 
 #[derive(Debug)]
 pub struct Program {
-    pub namespaces: Vec<Namespace>
+    pub namespaces: Vec<Namespace>,
+    pub usestatements: Vec<UseStatement>
 }
 impl Program {
     pub fn new() -> Self {
-        Program {namespaces: vec![]}
+        Program {namespaces: vec![], usestatements: vec![]}
+    }
+}
+
+#[derive(Debug)]
+pub struct UseStatement {
+    pub name: String
+}
+impl UseStatement {
+    pub fn new() -> Self {
+        UseStatement {name: "".to_string()}
     }
 }
 
@@ -141,8 +152,13 @@ impl FunctionCall {
 
 #[derive(Debug)]
 pub struct VariableRedefinition {
-    name: String,
-    value: Expression
+    pub name: String,
+    pub value: Expression
+}
+impl VariableRedefinition {
+    pub fn new() -> Self {
+        VariableRedefinition {name: "".to_string(), value: Expression::Null(Null {})}
+    }
 }
 
 #[derive(Debug)]

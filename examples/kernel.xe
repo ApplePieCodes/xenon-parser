@@ -1,9 +1,14 @@
+use x86.core;
+
 namespace Kernel {
     pub void Start() {
-
+        string hello = "Hello World";
+        core.io.writeLn(hello);
+        hello = "Hello Again";
+        core.io.writeLn(hello);
     }
 
     pub void Run() {
-        
+        core.io.writeLn("I AM FUNCTIONAL");
     }
 }
