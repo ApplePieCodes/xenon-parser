@@ -4,7 +4,7 @@ use parser::Parser;
 
 mod lexer;
 mod parser;
-mod node;
+pub mod node;
 
 pub fn parse(code: &str) -> Program {
     let tokens: LexerIter = lexer::lex_tokens(code);  // Lex tokens from the source code
