@@ -93,7 +93,7 @@ impl<'a> Parser<'a> {
 
     fn parse_expression(&mut self) -> Expression {
         if self.is_operator(0) {
-            return Expression::BinaryOperation(self.parse_binary_operation());
+            return Expression::BinaryOperation(self.parse_binary_operation(0));
         }
         else {
             let mut term = Expression::Term(self.parse_term());
@@ -102,28 +102,47 @@ impl<'a> Parser<'a> {
         }
     }
 
-    fn parse_binary_operation(&mut self) -> BinaryOperation {
+    fn parse_binary_operation(&mut self, min_precedence: i32) -> BinaryOperation {
         let mut operation = BinaryOperation::new();
-
+    
+        // Parse the left-hand side
         operation.left = Box::new(Expression::Term(self.parse_term()));
-
-        self.i+=1;
-
-        operation.op = self.peek(0).literal.to_string();
-
-        self.i+=1;
-
-        if self.is_operator(1) {
-            operation.right = Box::new(Expression::BinaryOperation(self.parse_binary_operation()));
+    
+        while self.is_operator(1) {
+            let current_op = self.peek(0).literal.to_string();
+            let precedence = self.get_precedence(&current_op);
+    
+            // If the operator's precedence is less than the current minimum, break out of the loop
+            if precedence < min_precedence {
+                break;
+            }
+    
+            self.i += 1; // Consume the operator
+    
+            // Instead of parsing a Term for the right side, handle it as a BinaryOperation
+            operation.op = current_op.clone(); // Store the operator
+    
+            // Parse the right-hand side, considering operator precedence
+            let mut right_hand_side = Expression::Term(self.parse_term());
+            while self.is_operator(1) {
+                let next_op = self.peek(0).literal.to_string();
+                let next_precedence = self.get_precedence(&next_op);
+    
+                // If the next operator has a higher precedence, handle it first
+                if next_precedence > precedence {
+                    right_hand_side = Expression::BinaryOperation(self.parse_binary_operation(next_precedence));
+                } else {
+                    break;
+                }
+            }
+    
+            operation.right = Box::new(right_hand_side); // Assign right side properly
         }
-        else {
-            operation.right = Box::new(Expression::Term(self.parse_term()));
-        }
-
-        self.i+=1;
-
-        return operation;
+    
+        operation // Return the fully constructed BinaryOperation
     }
+    
+    
 
     fn parse_term(&mut self) -> Term {
         if self.match_token(0, TokenKind::StringLit) {
@@ -353,4 +372,14 @@ impl<'a> Parser<'a> {
         }
         false
     }
+
+        // Function to return precedence based on the operator
+    fn get_precedence(&self, op: &str) -> i32 {
+        match op {
+            "+" | "-" => 1,              // Addition and subtraction
+            "*" | "/" | "%" => 2,        // Multiplication, division, and modulus
+            "==" | "!=" | "<" | ">" | "<=" | ">=" => 3, // Comparison operators
+            _ => 0,                      // Unknown operators or lowest precedence
+        }
+    }    
 }
