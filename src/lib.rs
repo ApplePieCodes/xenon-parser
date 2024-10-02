@@ -15,3 +15,30 @@ pub fn parse(code: &str) -> Program {
     let program = parser.parse();  // Parse the tokens (assuming `parse` is implemented)
     return program
 }
+
+#[cfg(test)]
+mod tests {
+    use node::{Expression, Statement, Term};
+
+    use super::*; // Import everything from the parent module
+    use crate::node::{Definition, FunctionDefinition}; // Adjust imports as necessary
+
+    #[test]
+    fn test_program_parsing() {
+        let code = r#"
+            use example.library;
+
+            namespace Program {
+                fn main() {
+                    float i = 0 + 123 * 48 / 18 % 3;
+                    i = 0 * 12 - 3 / 12;
+                    core.io.writeLn("Hello World");
+                }
+            }
+        "#;
+
+        let program = parse(code); // Use the parse function
+
+        println!("{:#?}", program);
+    }
+}
