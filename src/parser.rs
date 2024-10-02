@@ -92,7 +92,7 @@ impl<'a> Parser<'a> {
     }
 
     fn parse_expression(&mut self) -> Expression {
-        if self.is_operator(0) {
+        if self.is_operator(1) {
             return Expression::BinaryOperation(self.parse_binary_operation());
         }
         else {
@@ -119,9 +119,8 @@ impl<'a> Parser<'a> {
             operation.right = Box::new(Expression::BinaryOperation(self.parse_binary_operation()));
         } else {
             operation.right = Box::new(Expression::Term(self.parse_term()));
+            self.i+=1;
         }
-    
-        self.i += 1;
     
         operation
     }
