@@ -1,7 +1,9 @@
 /*use eframe::{egui, App, Frame};
 use std::sync::Arc;*/
 
-#[derive(Debug)]
+use serde::{Deserialize, Serialize};
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Program {
     pub namespaces: Vec<Namespace>,
     pub usestatements: Vec<UseStatement>
@@ -12,7 +14,7 @@ impl Program {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct UseStatement {
     pub name: String
 }
@@ -22,7 +24,7 @@ impl UseStatement {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Namespace {
     pub name: String,
     pub definitions: Vec<Definition>
@@ -33,7 +35,7 @@ impl Namespace {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 // Definitions
 pub enum Definition {
     FunctionDefinition(FunctionDefinition),
@@ -41,7 +43,7 @@ pub enum Definition {
     VariableDefinition(VariableDefinition)
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct FunctionDefinition {
     pub public: bool,
     pub ftype: String,
@@ -55,7 +57,7 @@ impl FunctionDefinition {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct ClassDefinition {
     pub public: bool,
     pub name: String,
@@ -66,8 +68,7 @@ impl ClassDefinition {
         ClassDefinition {name: "".to_string(), definitions: vec![], public: false}
     }
 }
-
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 //Statement and Definition
 pub struct VariableDefinition {
     pub public: bool,
@@ -81,7 +82,7 @@ impl VariableDefinition {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 // Statements
 pub enum Statement {
     VariableDefinition(VariableDefinition),
@@ -90,14 +91,14 @@ pub enum Statement {
     Null(Null)
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 pub enum Expression {
     BinaryOperation(BinaryOperation),
     Term(Term),
     Null(Null)
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 pub enum Term {
     FunctionCall(FunctionCall),
     IntegerLiteral(IntegerLiteral),
@@ -109,37 +110,37 @@ pub enum Term {
     Null(Null)
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct IntegerLiteral {
     pub value: String
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct FloatLiteral {
     pub value: String
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct StringLiteral {
     pub value: String
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct CharLiteral {
     pub value: String
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct BooleanLiteral {
     pub value: String
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct VariableReference {
     pub value: String
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct FunctionCall {
     pub name: String,
     pub arguements: Vec<Expression>
@@ -150,7 +151,7 @@ impl FunctionCall {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct VariableRedefinition {
     pub name: String,
     pub value: Expression
@@ -161,7 +162,7 @@ impl VariableRedefinition {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct BinaryOperation {
     pub left: Box<Expression>,
     pub op: String,
@@ -173,5 +174,5 @@ impl BinaryOperation {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Null {}
