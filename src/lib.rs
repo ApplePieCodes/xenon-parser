@@ -18,10 +18,7 @@ pub fn parse(code: &str) -> Program {
 
 #[cfg(test)]
 mod tests {
-    use node::{Expression, Statement, Term};
-
     use super::*; // Import everything from the parent module
-    use crate::node::{Definition, FunctionDefinition}; // Adjust imports as necessary
 
     #[test]
     fn test_program_parsing() {

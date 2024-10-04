@@ -88,7 +88,30 @@ pub enum Statement {
     VariableDefinition(VariableDefinition),
     FunctionCall(FunctionCall),
     VariableRedefinition(VariableRedefinition),
+    IfStatement(IfStatement),
+    ElifStatement(ElifStatement),
+    ElseStatement(ElseStatement),
     Null(Null)
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct IfStatement {
+    condition: Expression,
+    actions: Vec<Statement>
+}
+#[derive(Debug, Serialize, Deserialize)]
+pub struct ElifStatement {
+    condition: Expression,
+    actions: Vec<Statement>
+}
+#[derive(Debug, Serialize, Deserialize)]
+pub struct ElseStatement {
+    actions: Vec<Statement>
+}
+#[derive(Debug, Serialize, Deserialize)]
+pub struct WhileStatement {
+    condition: Expression,
+    actions: Vec<Statement>
 }
 
 #[derive(Debug, Serialize, Deserialize)]

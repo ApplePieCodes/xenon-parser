@@ -76,6 +76,14 @@ pub enum TokenKind {
     NamespaceKw,
     #[token("class")]
     ClassKw,
+    #[token("if")]
+    IfKw,
+    #[token("elif")]
+    ElifKw,
+    #[token("else")]
+    ElseKw,
+    #[token("while")]
+    WhileKw,
 
 
     // Literals
