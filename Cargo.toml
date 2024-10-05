@@ -1,6 +1,6 @@
 [package]
 name = "xenon-parser"
-version = "0.1.8"
+version = "0.1.9"
 authors = ["Liam Greenway <Discord@ApplePieOnRye>"]
 edition = "2021"
 rust-version = "1.81"

@@ -1,6 +1,3 @@
-/*use eframe::{egui, App, Frame};
-use std::sync::Arc;*/
-
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -91,27 +88,62 @@ pub enum Statement {
     IfStatement(IfStatement),
     ElifStatement(ElifStatement),
     ElseStatement(ElseStatement),
+    WhileStatement(WhileStatement),
     Null(Null)
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct IfStatement {
-    condition: Expression,
-    actions: Vec<Statement>
+    pub condition: Expression,
+    pub statements: Vec<Statement>
 }
+impl IfStatement {
+    pub fn new() -> Self {
+        IfStatement {condition: Expression::Null(Null {}), statements: vec![]}
+    }
+}
+
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct ArrayLiteral {
+    values: Vec<Expression>
+}
+impl ArrayLiteral {
+    pub fn new() -> Self {
+        ArrayLiteral {values: vec![]}
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ElifStatement {
-    condition: Expression,
-    actions: Vec<Statement>
+    pub condition: Expression,
+    pub statements: Vec<Statement>
 }
+impl ElifStatement {
+    pub fn new() -> Self {
+        ElifStatement {condition: Expression::Null(Null {}), statements: vec![]}
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ElseStatement {
-    actions: Vec<Statement>
+    pub statements: Vec<Statement>
 }
+impl ElseStatement {
+    pub fn new() -> Self {
+        ElseStatement {statements: vec![]}
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct WhileStatement {
-    condition: Expression,
-    actions: Vec<Statement>
+    pub condition: Expression,
+    pub statements: Vec<Statement>
+}
+impl WhileStatement {
+    pub fn new() -> Self {
+        WhileStatement {condition: Expression::Null(Null {}), statements: vec![]}
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -130,6 +162,7 @@ pub enum Term {
     CharLiteral(CharLiteral),
     BooleanLiteral(BooleanLiteral),
     VariableReference(VariableReference),
+    ArrayLiteral(ArrayLiteral),
     Null(Null)
 }
 

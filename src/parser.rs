@@ -1,4 +1,4 @@
-use crate::{lexer::{SourceLoc, Token, TokenKind}, node::{BinaryOperation, BooleanLiteral, ClassDefinition, Definition, Expression, FloatLiteral, FunctionCall, FunctionDefinition, IntegerLiteral, Namespace, Null, Program, Statement, StringLiteral, Term, UseStatement, VariableDefinition, VariableRedefinition, VariableReference}};
+use crate::{lexer::{SourceLoc, Token, TokenKind}, node::{BinaryOperation, BooleanLiteral, ClassDefinition, Definition, ElifStatement, ElseStatement, Expression, FloatLiteral, FunctionCall, FunctionDefinition, IfStatement, IntegerLiteral, Namespace, Null, Program, Statement, StringLiteral, Term, UseStatement, VariableDefinition, VariableRedefinition, VariableReference, WhileStatement}};
 
 pub struct Parser<'a> {
     tokens: &'a [Token<'a>], // Changed to a slice for better flexibility
@@ -208,6 +208,7 @@ impl<'a> Parser<'a> {
         return  Definition::FunctionDefinition(FunctionDefinition::new());
     }
 
+
     fn parse_function_definition(&mut self) -> FunctionDefinition {
         let mut definition = FunctionDefinition::new();
 
@@ -262,7 +263,19 @@ impl<'a> Parser<'a> {
             else {
                 statment = Statement::Null(Null {});
             }
+        }
+        else if self.match_token(0, TokenKind::IfKw) {
+            statment = Statement::IfStatement(self.parse_if_statement());
+        }
+        else if self.match_token(0, TokenKind::ElifKw) {
+            statment = Statement::ElifStatement(self.parse_elif_statement());
+        }
+        else if self.match_token(0, TokenKind::ElseKw) {
+            statment = Statement::ElseStatement(self.parse_else_statement());
         } 
+        else if self.match_token(0, TokenKind::WhileKw) {
+            statment = Statement::WhileStatement(self.parse_while_statement());
+        }
         else {
             statment = Statement::Null(Null {});
         }
@@ -272,6 +285,101 @@ impl<'a> Parser<'a> {
         
 
         return statment;
+    }
+
+    fn parse_if_statement(&mut self) -> IfStatement {
+        let mut statement = IfStatement::new();
+
+        //Skip the IF
+
+        self.i+=1;
+
+        //Skip the '('
+
+        self.i+=1;
+
+        statement.condition = self.parse_expression();
+
+        //Skip the ')'
+        self.i+=1;
+
+        //SKip the '{'
+        self.i+=1;
+
+        while ! self.match_token(0, TokenKind::CloseCurly) {
+            statement.statements.push(self.parse_statement());
+        }
+
+        return statement;
+    }
+
+    fn parse_while_statement(&mut self) -> WhileStatement {
+        let mut statement = WhileStatement::new();
+
+        //Skip the IF
+
+        self.i+=1;
+
+        //Skip the '('
+
+        self.i+=1;
+
+        statement.condition = self.parse_expression();
+
+        //Skip the ')'
+        self.i+=1;
+
+        //SKip the '{'
+        self.i+=1;
+
+        while ! self.match_token(0, TokenKind::CloseCurly) {
+            statement.statements.push(self.parse_statement());
+        }
+
+        return statement;
+    }
+
+    fn parse_elif_statement(&mut self) -> ElifStatement {
+        let mut statement = ElifStatement::new();
+
+        //Skip the ELIF
+
+        self.i+=1;
+
+        //Skip the '('
+
+        self.i+=1;
+
+        statement.condition = self.parse_expression();
+
+        //Skip the ')'
+        self.i+=1;
+
+        //SKip the '{'
+        self.i+=1;
+
+        while ! self.match_token(0, TokenKind::CloseCurly) {
+            statement.statements.push(self.parse_statement());
+        }
+        
+        return statement;
+    }
+
+    fn parse_else_statement(&mut self) -> ElseStatement {
+        let mut statement = ElseStatement::new();
+
+        //Skip the IF
+
+        self.i+=1;
+
+        //SKip the '{'
+        self.i+=1;
+
+        while ! self.match_token(0, TokenKind::CloseCurly) {
+            statement.statements.push(self.parse_statement());
+        }
+        
+        return statement;
     }
 
     fn parse_variable_redefinition(&mut self) -> VariableRedefinition {

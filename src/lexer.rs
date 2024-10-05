@@ -59,6 +59,10 @@ pub enum TokenKind {
     OpenParen,
     #[token(")")]
     CloseParen,
+    #[token("[")]
+    OpenBracket,
+    #[token("]")]
+    CloseBarcket,
     #[token("{")]
     OpenCurly,
     #[token("}")]

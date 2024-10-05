@@ -30,6 +30,12 @@ mod tests {
                     float i = 0 + 123 * 48 / 18 % 3;
                     i = 0 * 12 - 3 / 12;
                     core.io.writeLn("Hello World");
+                    if (i == 0) {
+                        core.io.writeLn("It's 2!");
+                    }
+                    while (i == 0) {
+                        i = i + 1;
+                    }
                 }
             }
         "#;
